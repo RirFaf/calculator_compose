@@ -104,7 +104,7 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun setFirstNum() {
-        if (_uiState.value.result == "") {
+        if (_uiState.value.result == "" || _uiState.value.input.isNotBlank()) {
             _uiState.update {
                 it.copy(
                     firstNumber = it.input.toDouble()
@@ -112,6 +112,8 @@ class CalculatorViewModel : ViewModel() {
             }
             _uiState.update {
                 it.copy(
+                    secondNumber = null,
+                    result = "",
                     input = ""
                 )
             }

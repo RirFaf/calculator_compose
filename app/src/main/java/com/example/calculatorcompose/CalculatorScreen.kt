@@ -447,7 +447,7 @@ fun CalculatorScreen(
             }
             Button(
                 onClick = {
-                    if (state.input.last() != '.') {
+                    if (state.input.isNotEmpty() && state.input.last() != '.') {
                         viewModel.setInput("${state.input}.")
                     }
                 },
