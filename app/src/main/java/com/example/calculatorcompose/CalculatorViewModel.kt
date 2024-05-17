@@ -1,6 +1,9 @@
 package com.example.calculatorcompose
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -84,14 +87,16 @@ class CalculatorViewModel : ViewModel() {
                 )
             } else if (it.secondNumber != null) {
                 it.copy(
+                    input = "",
                     secondNumber = null
                 )
             } else if (it.operation != "") {
                 it.copy(
                     operation = ""
                 )
-            } else{
+            } else {
                 it.copy(
+                    input = "",
                     firstNumber = null
                 )
             }
@@ -99,15 +104,27 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun setFirstNum() {
-        _uiState.update {
-            it.copy(
-                firstNumber = it.input.toDouble()
-            )
-        }
-        _uiState.update {
-            it.copy(
-                input = ""
-            )
+        if (_uiState.value.result == "") {
+            _uiState.update {
+                it.copy(
+                    firstNumber = it.input.toDouble()
+                )
+            }
+            _uiState.update {
+                it.copy(
+                    input = ""
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    firstNumber = it.result.toDouble(),
+                    operation = "",
+                    secondNumber = null,
+                    result = "",
+                    input = ""
+                )
+            }
         }
     }
 
@@ -129,6 +146,14 @@ class CalculatorViewModel : ViewModel() {
             it.copy(
                 operation = input
             )
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                CalculatorViewModel()
+            }
         }
     }
 }
